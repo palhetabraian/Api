@@ -47,8 +47,8 @@ class UsersController {
       throw new AppError("Este email ja esta em uso");
     }
 
-    user.name = name;
-    user.email = email;
+    user.name = name ?? user.name;
+    user.email = email ?? user.name;
 
     if (password && !old_password) {
       throw new AppError(
@@ -70,11 +70,11 @@ class UsersController {
       `
       UPDATE users SET
       name = ?,
-      email = ?,
-      password = ?,
-      updated_at = ?
+      email = ?,,
+      password = ?, 
+      updated_at = DATETIME('now')
       WHERE id = ?`,
-      [(user.name, user.email, user.password, new Date(), id)]
+      [(user.name, user.email, user.password, id)]
     );
 
     return response.status(200).json();
